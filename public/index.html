@@ -16,30 +16,40 @@
   <ul id="entries"></ul>
 
   <script>
-    async function loadEntries() {
-      const res = await fetch('/entries');
-      const data = await res.json();
-      const list = document.getElementById('entries');
-      list.innerHTML = '';
-      data.forEach(e => {
-        const li = document.createElement('li');
-        li.textContent = `${e.date}: ${e.text}`;
-        list.appendChild(li);
-      });
+  async function loadEntries() {
+    const res = await fetch('/entries');
+    const data = await res.json();
+    const list = document.getElementById('entries');
+    list.innerHTML = '';
+
+    data.forEach(e => {
+      const li = document.createElement('li');
+      li.textContent = `${new Date(e.date).toLocaleString()}: ${e.text}`;
+      list.appendChild(li);
+    });
+  }
+
+  async function addEntry() {
+    const textarea = document.getElementById('text');
+    const text = textarea.value.trim();
+
+    if (!text) {
+      alert('Запись не может быть пустой');
+      return;
     }
 
-    async function addEntry() {
-      const text = document.getElementById('text').value;
-      await fetch('/entries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-      document.getElementById('text').value = '';
-      loadEntries();
-    }
+    await fetch('/entries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
 
+    textarea.value = '';
     loadEntries();
-  </script>
+  }
+
+  loadEntries();
+</script>
 </body>
 </html>
+
