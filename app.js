@@ -16,11 +16,19 @@ app.get('/entries', (req, res) => {
 // Добавить новую запись
 app.post('/entries', (req, res) => {
   const { text } = req.body;
-  const data = JSON.parse(fs.readFileSync(DATA_FILE));
+
+  if (!text || text.trim() === '') {
+    return res.status(400).json({ error: 'Text is required' });
+  }
+
+  let data = [];
+  if (fs.existsSync(DATA_FILE)) {
+    data = JSON.parse(fs.readFileSync(DATA_FILE));
+  }
 
   const newEntry = {
     id: Date.now(),
-    text,
+    text: text.trim(),
     date: new Date().toISOString()
   };
 
@@ -33,4 +41,5 @@ app.post('/entries', (req, res) => {
 app.listen(3000, () => {
   console.log('Diary app running on port 3000');
 });
+
 
