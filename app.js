@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 
+app.use(express.static('public'));
 app.use(express.json());
 
 const DATA_FILE = './data/diary.json';
@@ -32,3 +33,4 @@ app.post('/entries', (req, res) => {
 app.listen(3000, () => {
   console.log('Diary app running on port 3000');
 });
+
