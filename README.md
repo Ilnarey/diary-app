@@ -41,15 +41,14 @@
 
 - Node.js
 - Express.js
-- HTML5
-- CSS3
+- HTML
+- CSS
 - JavaScript
 - Docker
 - Docker Compose
 - Git
 - GitHub
 - GitHub Actions
-- Render (или Railway, если будешь использовать его)
 
 ---
 
