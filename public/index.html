@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный дневник</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>📖 Личный дневник</h1>
+        <p>Сохраняйте свои мысли, идеи и воспоминания</p>
+    </header>
+
+    <div class="card">
+
+        <textarea
+                id="text"
+                placeholder="Что произошло сегодня?"></textarea>
+
+        <button class="save-btn" onclick="addEntry()">
+            ➕ Добавить запись
+        </button>
+
+    </div>
+
+    <h2>Мои записи</h2>
+
+    <div id="entries" class="entries"></div>
+
+</div>
+
+<script>
+
+async function loadEntries() {
+
+    const res = await fetch('/entries');
+    const data = await res.json();
+
+    const list = document.getElementById("entries");
+
+    list.innerHTML = "";
+
+    data.reverse().forEach(entry => {
+
+        const card = document.createElement("div");
+
+        card.className = "entry";
+
+        card.innerHTML = `
+            <div class="entry-date">
+                ${new Date(entry.date).toLocaleString()}
+            </div>
+
+            <div class="entry-text">
+                ${entry.text}
+            </div>
+
+            <div class="buttons">
+
+                <button class="edit"
+                    onclick="editEntry(${entry.id})">
+                    ✏ Редактировать
+                </button>
+
+                <button class="delete"
+                    onclick="deleteEntry(${entry.id})">
+                    🗑 Удалить
+                </button>
+
+            </div>
+        `;
+
+        list.appendChild(card);
+
+    });
+
+}
+
+async function addEntry() {
+
+    const textarea = document.getElementById("text");
+
+    const text = textarea.value.trim();
+
+    if (!text) {
+        alert("Введите текст записи");
+        return;
+    }
+
+    await fetch("/entries", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            text
+        })
+
+    });
+
+    textarea.value = "";
+
+    loadEntries();
+
+}
+
+async function deleteEntry(id) {
+
+    await fetch(`/entries/${id}`, {
+        method: "DELETE"
+    });
+
+    loadEntries();
+
+}
+
+async function editEntry(id) {
+
+    const text = prompt("Введите новый текст");
+
+    if (!text) return;
+
+    await fetch(`/entries/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            text
+        })
+
+    });
+
+    loadEntries();
+
+}
+
+loadEntries();
+
+</script>
+
+</body>
+</html>
