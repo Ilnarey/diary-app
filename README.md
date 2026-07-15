@@ -167,7 +167,7 @@ diary-app
 ```
 ## Публичный URL
 
-https://diary-app-8j8m.onrender.com
+https://diary-app-12gr.onrender.com/
 ---
 
 ## Стек
