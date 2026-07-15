@@ -165,9 +165,10 @@ diary-app
 ├── app.js
 └── README.md
 ```
+## Публичный URL
 
+https://diary-app-8j8m.onrender.com
 ---
-
 
 ## Стек
 
